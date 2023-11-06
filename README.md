@@ -1,4 +1,4 @@
-![Kalah Workflow](https://github.com/github/docs/actions/workflows/master-ci.yaml/badge.svg)
+![Kalah Workflow](https://github.com/douradofrazer/kalah/actions/workflows/master-ci.yaml/badge.svg)
 
 Kalah
 ======================
