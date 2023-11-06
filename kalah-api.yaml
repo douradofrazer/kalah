@@ -1,0 +1,214 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: kalah-v1.0.0
+  summary: Kalah game server apis.
+  description: Endpoints to access the kalah game backend server.
+  contact:
+    name: FJD
+    email: support@gmail.com
+    url: 'https://support-dev.com'
+  license:
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+    name: License (Apache 2.0)
+servers:
+  - url: 'http://localhost:8080'
+paths:
+  /v1/games/init:
+    post:
+      summary: New Game
+      description: This endpoint is used to create a new kalah game.
+      operationId: post-v1-games-init
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: Bad Request
+      servers:
+        - url: 'http://localhost:8080'
+  '/v1/games/{gameRef}/status':
+    get:
+      summary: Game Status
+      operationId: get-v1-games-gameRef-status
+      parameters:
+        - name: gameRef
+          in: path
+          description: Unique game reference.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardState'
+        '404':
+          description: Not Found
+      servers:
+        - url: 'http://localhost:8080'
+  '/v1/games/{gameRef}/join':
+    put:
+      summary: Join Game
+      operationId: put-v1-games-gameRef-join
+      parameters:
+        - name: gameRef
+          in: path
+          description: Unique game reference.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: Bad Request
+      servers:
+        - url: 'http://localhost:8080'
+  '/v1/games/{gameRef}/move':
+    put:
+      summary: Make Move
+      operationId: put-v1-games-gameRef-move
+      parameters:
+        - name: gameRef
+          in: path
+          description: Unique game reference.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Move'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardState'
+        '400':
+          description: Bad Request
+      servers:
+        - url: 'http://localhost:8080'
+components:
+  schemas:
+    Player:
+      type: object
+      title: Player
+      properties:
+        userName:
+          type: string
+          description: User name of the player.
+          examples:
+            - john_doe
+      required:
+        - userName
+    Game:
+      type: object
+      title: Game
+      properties:
+        gameReference:
+          type: string
+          description: Unique reference of the game.
+          format: uuid
+        playerOne:
+          type: string
+          description: User name of the player one.
+          examples:
+            - john_doe
+        playerTwo:
+          type: string
+          description: User name of the player two.
+          examples:
+            - jane_doe
+      required:
+        - gameReference
+    BoardState:
+      type: object
+      title: BoardState
+      properties:
+        gameReference:
+          type: string
+          description: Unique game reference.
+          format: uuid
+        status:
+          enum:
+            - INITIALIZED
+            - IN_PROGRESS
+            - FINISHED
+        pits:
+          type: array
+          minItems: 13
+          maxItems: 13
+          items:
+            $ref: '#/components/schemas/Pit'
+        winner:
+          type: string
+          examples:
+            - john_doe
+      required:
+        - gameReference
+    Pit:
+      type: object
+      title: Pit
+      properties:
+        houseIndex:
+          type: integer
+          description: The house index selected by the player.
+          format: int32
+          minimum: 0
+          maximum: 13
+          examples:
+            - 0
+        player:
+          type: string
+          description: User name of the player.
+          examples:
+            - john_doe
+        seeds:
+          type: integer
+          description: Seeds in the pit.
+      required:
+        - houseIndex
+        - player
+        - seeds
+    Move:
+      type: object
+      title: Move
+      properties:
+        userName:
+          type: string
+          description: User name of the player.
+        houseIndex:
+          type: integer
+          description: The house index selected by the player.
+          format: int32
+          minimum: 0
+          maximum: 13
+      required:
+        - userName
+        - houseIndex

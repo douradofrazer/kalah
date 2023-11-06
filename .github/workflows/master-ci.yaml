@@ -44,7 +44,7 @@ jobs:
         run: cd kalah && mvn clean -U -B package -DskipTests
 
       - name: Build and run the app
-        run: cd kalah && docker-compose -f docker-compose.yml up -d -V --build
+        run: cd kalah && docker-compose -f docker-compose.yaml up -d -V --build
 
       - name: Fetch Backend Status
         run: |
