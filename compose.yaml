@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+
+  db:
+    image: postgres:15-alpine
+    container_name: kalah_db
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "change_this_password"
+      POSTGRES_DB: "kalah"
+    restart: always
+    ports:
+      - 5432:5432
+
+  cache:
+    image: redis:7.2-alpine
+    container_name: kalah_cache
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+    ports:
+      - 6379:6379

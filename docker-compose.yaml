@@ -1,0 +1,49 @@
+version: '3.5'
+
+services:
+
+  kalah_app:
+    container_name: kalah_app
+    build:
+      .
+    ports:
+      - 8080:8080
+    environment:
+      - "DB_HOST=kalah-db"
+      - "DB_NAME=kalah"
+      - "DB_USER=admin"
+      - "DB_PASSWORD=change_this_password"
+      - "ADMIN_DB_USER=admin"
+      - "ADMIN_DB_PASSWORD=change_this_password"
+      - "REDIS_HOST=kalah-cache"
+      - "REDIS_PORT=6379"
+    logging:
+      options:
+        max-file: '10'
+        max-size: 200k
+    links:
+      - kalah-db:kalah-db
+      - kalah-cache:kalah-cache
+    depends_on:
+      - kalah-db
+      - kalah-cache
+
+  kalah-db:
+    image: postgres:15-alpine
+    container_name: kalah_db
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "change_this_password"
+      POSTGRES_DB: "kalah"
+    restart: always
+    ports:
+      - 5432:5432
+
+  kalah-cache:
+    image: redis:7.2-alpine
+    container_name: kalah_cache
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
+    ports:
+      - '6379:6379'

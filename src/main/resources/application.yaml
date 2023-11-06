@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  docker:
+    compose:
+      file: compose.yaml
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost:5432}/${DB_NAME:kalah}
+    username: ${DB_USER:admin}
+    password: ${DB_PASSWORD:change_this_password}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    user: ${ADMIN_DB_USER:admin}
+    password: ${ADMIN_DB_PASSWORD:change_this_password}
+    validateMigrationNaming: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
