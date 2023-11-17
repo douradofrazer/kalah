@@ -2,11 +2,13 @@ package com.fraz.demo.kalah.integration;
 
 import com.fraz.demo.kalah.domain.constant.GameStatus;
 import com.fraz.demo.kalah.repository.GameInMemoryRepository;
+import com.fraz.demo.kalah.repository.GameRepository;
 import com.fraz.demo.kalah.repository.model.Kalah;
 import com.redis.testcontainers.RedisContainer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Container;
@@ -29,6 +31,7 @@ public class GameInMemoryRepositoryIT {
 
   private final String playerOne = "out_law";
   private final String playerTwo = "billy_the_kid";
+  @MockBean private GameRepository gameRepository;
   @Autowired private GameInMemoryRepository gameInMemoryRepository;
 
   @Container

@@ -1,6 +1,8 @@
 package com.fraz.demo.kalah.domain;
 
 import com.fraz.demo.kalah.domain.constant.GameStatus;
+import com.fraz.demo.kalah.exception.GameNotPlayableException;
+import com.fraz.demo.kalah.exception.InvalidOperationException;
 import com.fraz.demo.kalah.service.mapper.Default;
 import lombok.Getter;
 import java.util.Arrays;
@@ -52,30 +54,30 @@ public class KalahGame {
 
   public void joinGame(final String gameReference, final String playerTwo) {
     if (null == playerTwo || playerTwo.isEmpty()) {
-      throw new RuntimeException("Player cannot be null/empty");
+      throw new InvalidOperationException("Player cannot be null/empty");
     } else if (null != this.playerTwo) {
-      throw new RuntimeException("Game already has two players!");
+      throw new InvalidOperationException("Game already has two players!");
     } else if (playerOne.equals(playerTwo)) {
-      throw new RuntimeException("Player cannot play against self");
+      throw new InvalidOperationException("Player cannot play against self");
     }
     if (this.gameReference.toString().equals(gameReference)) {
       this.playerTwo = playerTwo;
       IntStream.range(7, 14).forEach(i -> setStoreOwner(i, playerTwo));
       this.gameStatus = GameStatus.IN_PROGRESS;
     } else {
-      throw new RuntimeException("Invalid game reference");
+      throw new InvalidOperationException("Invalid game reference");
     }
   }
 
   public void isGamePlayable() {
     // if missing players, not playable
     if (null == this.playerTwo || null == this.playerOne) {
-      throw new RuntimeException("Game is not playable, not enough players");
+      throw new GameNotPlayableException("Game is not playable, not enough players");
     }
 
     // if finished, not playable
     if (GameStatus.FINISHED.equals(this.getGameStatus())) {
-      throw new RuntimeException("Game has ended.");
+      throw new GameNotPlayableException("Game has ended.");
     }
   }
 
@@ -88,7 +90,7 @@ public class KalahGame {
         || !player.equals(pit.getOwner())
         || pit.getPitType().equals(Pit.PitType.STORE)
         || pit.getSeeds() == 0) {
-      throw new RuntimeException("Invalid move");
+      throw new InvalidOperationException("Invalid move");
     }
 
     int seeds = pit.getSeeds();
