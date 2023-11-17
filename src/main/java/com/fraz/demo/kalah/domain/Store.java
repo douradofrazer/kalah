@@ -1,5 +1,7 @@
 package com.fraz.demo.kalah.domain;
 
+import com.fraz.demo.kalah.exception.InvalidOperationException;
+
 public class Store implements Pit {
 
   private String owner;
@@ -24,7 +26,7 @@ public class Store implements Pit {
 
   public void depositSeeds(String owner, int seeds) {
     if (null == owner || !owner.equals(this.owner)) {
-      throw new RuntimeException("Invalid move");
+      throw new InvalidOperationException("Invalid move");
     }
     this.seeds += seeds;
   }

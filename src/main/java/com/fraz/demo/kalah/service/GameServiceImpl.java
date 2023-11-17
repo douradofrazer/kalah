@@ -3,6 +3,7 @@ package com.fraz.demo.kalah.service;
 import com.fraz.demo.kalah.domain.KalahGame;
 import com.fraz.demo.kalah.domain.Pit;
 import com.fraz.demo.kalah.domain.constant.GameStatus;
+import com.fraz.demo.kalah.exception.InvalidOperationException;
 import com.fraz.demo.kalah.repository.GameInMemoryRepository;
 import com.fraz.demo.kalah.repository.GameRepository;
 import com.fraz.demo.kalah.repository.model.Game;
@@ -46,7 +47,7 @@ public class GameServiceImpl implements GameService {
     Kalah game =
         gameInMemoryRepository
             .findById(gameRef)
-            .orElseThrow(() -> new RuntimeException("Game not found"));
+            .orElseThrow(() -> new InvalidOperationException("Game not found"));
 
     KalahGame kalahGame = kalahMapper.toKalahGame(game);
     kalahGame.joinGame(gameRef.toString(), player.userName());
@@ -65,7 +66,7 @@ public class GameServiceImpl implements GameService {
     Kalah game =
         gameInMemoryRepository
             .findById(UUID.fromString(gameRef))
-            .orElseThrow(() -> new RuntimeException("Game not found"));
+            .orElseThrow(() -> new InvalidOperationException("Game not found"));
 
     return new BoardStateDto(
         game.getGameReference().toString(),
@@ -94,7 +95,7 @@ public class GameServiceImpl implements GameService {
     Kalah game =
         gameInMemoryRepository
             .findById(gameRef)
-            .orElseThrow(() -> new RuntimeException("Game not found"));
+            .orElseThrow(() -> new InvalidOperationException("Game not found"));
 
     KalahGame kalahGame = kalahMapper.toKalahGame(game);
     kalahGame.isGamePlayable();
